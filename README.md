@@ -10,7 +10,7 @@ In this example, the detector is matching String types, though these could be Co
 which type to build, in this case a PersistenceManager< T > of type Document:
 
 ```java
-      Factory< String, PersistenceManager< Document > > pFactory = new Factory<>( "com.example.demo.persistence" );
+      Factory< String, PersistenceManager< Document > > pFactory = new Factory<>( "org.brokenlance.persistence" );
       PersistenceManager< Document > pm = pFactory.build( "mongo" );
       pm.serialize( document );
 ```
@@ -18,7 +18,45 @@ which type to build, in this case a PersistenceManager< T > of type Document:
 In this case, the "file-system" detector should match and create its datatype:
 
 ```java
-      Factory< String, PersistenceManager< Document > > pFactory = new Factory<>( "com.example.demo.persistence" );
+      Factory< String, PersistenceManager< Document > > pFactory = new Factory<>( "org.brokenlance.persistence" );
       PersistenceManager< Document > pm = pFactory.build( "file-system" );
       pm.serialize( document );
 ```
+
+### Structure
+The following diagram exhibits the class hierarchy for the factory framework:
+                                                                                                                            
+                            +--------------------+                                                                          
+                            |                    |                                                                          
+                            |   Factory< P, T >  |                                                                             
+                            |--------------------|                                                                          
+                            | + T: build( P )    |                                                                          
+                            |                    |                                                                          
+                            +--------------------+                                                                          
+                                      | 1                                                                                    
+                                      |                                                                                     
+                                      v 1..*                                                                                    
+                            +---------------------+                                                                          
+                            |                     |  Using Java reflection, concrete instances of this interface             
+                            |  Detector< P, T >   |  are injected into the Factory class above so that during                                
+                            |---------------------|  runtime, the first Detector whose Predicate::test method                
+                            | + boolean: test( p )|  matches has its Supplier::get method invoked to create the        
+                            | + T:       get()    |  actual type T for this Factory.                                         
+                            |                     |                                                                          
+                            +---------------------+                                                                          
+                                      |                                                                                     
+                                     +++                                                                                    
+                                    ++ ++                                                                                   
+                                   ++   ++                                                                                  
+      +------------------+        ++     ++        +-----------------+                                                      
+      |                  |       ++       ++       |                 |                                                      
+      |  Predicate< P >  |<------+         +------>|  Supplier< T >  |                                                                                 
+      |                  |extends          extends |                 |                                                      
+      +------------------+                         +-----------------+                                                      
+                                                                                                                            
+                                                                                                                            
+                                                                                                                            
+                                                                                                                            
+                                                                                                                            
+                                                                                                                            
+                                                                                                                            

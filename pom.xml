@@ -67,4 +67,12 @@
          </plugin>
       </plugins>
    </build>
+ 
+   <distributionManagement>
+      <repository>
+         <id>github</id>
+         <name>GitHub brokenlance Apache Maven Packages</name>
+         <url>https://maven.pkg.github.com/brokenlance/factory</url>
+      </repository>
+   </distributionManagement>
 </project>
