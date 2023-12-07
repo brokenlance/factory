@@ -27,10 +27,13 @@ public class Factory< P, T > implements Serializable
    private List< Detector< P, T > > detectors = new ArrayList<>();
 
    /**
-    *  Default constructor.
+    * Default constructor.
+    * Use this constructor when all the detectors are in the same package as this Factory.
+    * This is common when there's only one Factory in the application.
     */
    public Factory()
    {
+      initialize( this.getClass().getPackageName() );
    }
 
    /**
@@ -39,6 +42,14 @@ public class Factory< P, T > implements Serializable
     *   filterInputsBy( new FilterBuilder().excludePackage( "package" ) );
     */
    public Factory( String packageName )
+   {
+      initialize( packageName );
+   }
+
+   /**
+    * Logic to perform the classloader initialization.
+    */
+   private void initialize( String packageName )
    {
       Reflections reflection = new Reflections( new ConfigurationBuilder().forPackage( packageName )
                                                                           .setScanners( Scanners.values() ) );
